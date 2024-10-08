@@ -50,7 +50,6 @@ function SideBar({ isOpen, toggleSidebar }) {
           transition={{ type: "spring", stiffness: 300, damping: 30 }} // Adjust the animation curve
         >
           <div className="flex w-[89px] h-[96px] items-center justify-end pr-2">
-            {/* Close button */}
             <div className="rounded-full hover:animate-jiggle h-fit flex justify-center bg-[#343538] right-2 ">
               <button onClick={toggleSidebar} className="">
                 <CloseTag color="white" />
@@ -100,6 +99,18 @@ function SideBar({ isOpen, toggleSidebar }) {
                             <ShopLogo />
                           </div>
                           <div className="align-bottom">Shop</div>
+                        </div>
+                      </Link>
+                    </button>
+                  </div>
+                  <div className="font-poppins flex justify-center animate-slideinright duration-500">
+                    <button className="relative hover:scale-110 font-poppins text-black cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-black before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-black after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]">
+                      <Link to="/register">
+                        <div className="flex gap-2 items-center">
+                          <div className="pb-1">
+                            <ProfileIcon color="black" fill="white" />
+                          </div>
+                          <div className="align-bottom">Register / Login</div>
                         </div>
                       </Link>
                     </button>

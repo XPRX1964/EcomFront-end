@@ -1,19 +1,47 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Link } from "react-router-dom";
-
+import EyeSee from "../Register/EyeSee";
+import Eye from "../Register/Eye";
 function Login() {
   const [isVisible, setIsVisible] = useState(false);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
   useEffect(() => {
-    // This delay ensures that the content will not be visible until the animation starts.
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 250); // Small delay to ensure content doesn't flash
+    }, 250);
 
-    return () => clearTimeout(timer); // Cleanup the timer if the component unmounts
+    return () => clearTimeout(timer);
   }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+      console.log(response.data);
+
+      alert("Successfully logged in !");
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed"); // Set error message if exists
+      console.error(err);
+    }
+  };
   return (
     <div
       className={`animate-fadein ${isVisible ? "opacity-100" : "opacity-0"}`}
@@ -41,17 +69,41 @@ function Login() {
               </div>
 
               <div className="shadow-lg tablet:p-20 py-10 px-[15px] flex justify-center items-center w-full">
-                <form className="w-full flex flex-col items-center">
+                <form
+                  className="w-full flex flex-col items-center"
+                  onSubmit={handleLogin}
+                >
                   <input
-                    type="text"
+                    type="email"
                     className="px-[15px] w-full font-poppins border-[#ebebeb] border text-[#333] text-[14px] h-[45px] mb-[30px] outline-none"
                     placeholder="username"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
-                  <input
-                    type="password"
-                    className="px-[15px] w-full font-poppins border-[#ebebeb] border text-[#333] text-[14px] h-[45px] mb-[30px] outline-none"
-                    placeholder="password"
-                  />
+                  <div className="flex w-full font-poppins border-[#ebebeb] border text-[#333] text-[14px] h-[45px] mb-[30px] outline-none">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="px-[15px] w-full font-poppins border-[#ebebeb] border-b text-[#333] text-[14px] h-[45px] mb-[30px] outline-none"
+                      placeholder="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="transition  max-h-fit mx-2"
+                    >
+                      <div
+                        className={`${
+                          showPassword ? "text-[#333]" : "text-[#9d9d9d]"
+                        }`}
+                      >
+                        {showPassword == false && <Eye />}
+                        {showPassword == true && <EyeSee />}
+                      </div>
+                    </button>
+                  </div>
+                  {error && <div className="text-red-500 mb-2">{error}</div>}{" "}
                   <div className="pt-[10px] pb-[19px] flex justify-between items-center w-full">
                     <div className="flex justify-between w-full">
                       <div>
@@ -71,7 +123,10 @@ function Login() {
                     </div>
                   </div>
                   <div className="justify-start flex w-full">
-                    <button className="bg-[#f2f2f2] py-[11px] px-[30px] group hover:bg-red-600 transition-colors duration-300">
+                    <button
+                      type="submit"
+                      className="bg-[#f2f2f2] py-[11px] px-[30px] group hover:bg-red-600 transition-colors duration-300"
+                    >
                       <span className="text-[14px] font-medium ease-in-out duration-700 group-hover:text-white">
                         LOGIN
                       </span>
